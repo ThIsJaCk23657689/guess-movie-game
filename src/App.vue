@@ -255,7 +255,7 @@ function addAdminItem() {
 
 onMounted(async () => {
 	try {
-		const res = await fetch('/games.json')
+		const res = await fetch(`${import.meta.env.BASE_URL}games.json`)
 		if (!res.ok) throw new Error('Failed to load games.json')
 		allGames.value = await res.json()
 	} catch (err) {
