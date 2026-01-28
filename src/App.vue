@@ -15,6 +15,7 @@ const categories = [
 	{ key: 'scifi', name: '科幻片', blurb: '合成音色與太空回音，答案在星際深處。' },
 	{ key: 'animation', name: '動畫片', blurb: '動畫世界的奇幻冒險，重溫童年時光。' },
 	{ key: 'taiwan', name: '國片', blurb: '熟悉的聲線與土地味，猜得到嗎？' },
+	{ key: 'bounce', name: '加分題', blurb: '額外挑戰，答對有加分！' }
 ]
 
 const view = ref('home')
