@@ -155,8 +155,9 @@ function pausePlayTimer() {
 	resetPlayTimer()
 }
 
-function forceRevealAnswer() {
-	revealAnswer(false)
+function forceEndThisRound() {
+	roundState.value = 'failed'
+	stopAudio()
 }
 
 async function startPlayback( playoffset = 0 ) {
@@ -180,7 +181,7 @@ async function startPlayback( playoffset = 0 ) {
 			timeLeft.value = remaining
 			if (remaining <= 0) {
 				resetPlayTimer()
-				forceRevealAnswer()
+				forceEndThisRound()
 			}
 		}, TIMER_INTERVAL)
 	} catch (err) {
@@ -494,7 +495,7 @@ onBeforeUnmount(() => {
 							</button>
 							<button
 								class="rounded-full border border-rose-300/60 px-6 py-2 text-sm font-semibold text-rose-100 hover:bg-rose-500/20 disabled:cursor-not-allowed disabled:bg-slate-600 disabled:text-slate-900 disabled:border-none"
-								:disabled="roundState !== 'answering'" @click="revealAnswer(true)">
+								:disabled="roundState !== 'answering' && roundState !== 'failed'" @click="revealAnswer(true)">
 								顯示答案
 							</button>
 							<button
@@ -548,7 +549,7 @@ onBeforeUnmount(() => {
 								</div>
 
 								<!-- 關閉提示 -->
-								<div class="my-4">
+								<div class="my-2">
 									<button
 										class="rounded-full bg-amber-400 px-8 py-3 text-sm font-semibold text-slate-900 hover:bg-amber-300"
 										@click="nextQuestion">
