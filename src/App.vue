@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, nextTick, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, nextTick, ref } from 'vue'
 
 const BASE_URL = import.meta.env.BASE_URL
 const audioUrl = computed(() => {
@@ -243,6 +243,41 @@ function adjustScore(team, delta) {
 	team.score += delta
 }
 
+const scoreKeyMap = {
+	q: { index: 0, delta: 1 },
+	w: { index: 1, delta: 1 },
+	e: { index: 2, delta: 1 },
+	r: { index: 3, delta: 1 },
+	t: { index: 4, delta: 1 },
+	a: { index: 0, delta: -1 },
+	s: { index: 1, delta: -1 },
+	d: { index: 2, delta: -1 },
+	f: { index: 3, delta: -1 },
+	g: { index: 4, delta: -1 },
+}
+
+function handleScoreHotkey(event) {
+	const target = event.target
+	if (
+		target instanceof HTMLElement &&
+		(target.tagName === 'INPUT' ||
+			target.tagName === 'TEXTAREA' ||
+			target.tagName === 'SELECT' ||
+			target.isContentEditable)
+	) {
+		return
+	}
+
+	const key = event.key.toLowerCase()
+	const mapping = scoreKeyMap[key]
+	if (!mapping) return
+
+	const team = teams.value[mapping.index]
+	if (!team) return
+
+	adjustScore(team, mapping.delta)
+}
+
 function handleFile(event, field) {
 	const file = event.target.files?.[0] ?? null
 	adminForm.value[field] = file
@@ -278,6 +313,12 @@ onMounted(async () => {
 	} catch (err) {
 		loadError.value = err.message || 'Failed to load game data'
 	}
+
+	window.addEventListener('keydown', handleScoreHotkey)
+})
+
+onBeforeUnmount(() => {
+	window.removeEventListener('keydown', handleScoreHotkey)
 })
 </script>
 
